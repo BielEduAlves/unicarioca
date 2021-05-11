@@ -1,120 +1,161 @@
-import React, { useState } from 'react';
-import { ImageBackground, StyleSheet, Text, View, ScrollView } from "react-native";
+import React, { useState, useContext, useEffect } from 'react';
+import { StyleSheet, ActivityIndicator, Image, View, ScrollView } from "react-native";
 
-import logo from '../../assets/logo.png';
+
+import logoImg from '../../assets/logo.png';
 import fundo from '../../assets/login_backgroud.png';
 
 import {
-		Container,
-		ContainerLogo,
-		Image,
-		ContainerTextoInicio,
-		Linha1,
-		Linha2,
-    CaixaLogin,
-		ContainerBotao,
-		Botao,
-		BotaoTexto,
-		InputTexto,
-		Input,
-		BotaoCadastrar,
-		BotaoEntrar,
-		BotaoTextoEntrar,
-		BotaoTextoCadastrar,
-		ContainerEsqueci,
-		EsqueciSenha,
-		EsqueciSenhaTexto
-
+	BackgroundImage,
+	Container,
+	Logo,
+	CaixaLogin,
+	Botao,
+	BotaoTexto,
+	InputTexto,
+	Input,
+	ForgotPassword,
+	TextForgotPassword,
+	ContainerBotoes,
+	ContainerInputs,
+	CaixaTextoChamada,
+	TextoChamada,
+	TextoGrupou,
+	ContainerButtons,
+	Button,
+	ButtonText,
 } from './style'
 
+import { UsuarioContext } from '../../context/usuario'
 
 export default function Login() {
-	
+
+	const { signIn, signUp } = useContext(UsuarioContext);
+
 	const [botaoAtual, setBotaoAtual] = useState('aluno');
+	const [carregando, setCarregando] = useState('false');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
 
-  return (
+	function handleSignIn() {
+		try {
+			signIn(email, password)
+		} catch (err) {
+			console.warn(err)
+		}
+	}
+
+	function handleSignUp() {
+		setCarregando(true);
+		try {
+			signUp(email, password)
+		} catch (err) {
+			console.warn(err)
+		} finally {
+			setCarregando(false);
+		}
+	}
+	return (
 		<>
-		
-		
-		<ScrollView>
-		<ImageBackground source={fundo} style={styles.fundo}></ImageBackground>
+			<BackgroundImage source={fundo}></BackgroundImage>
 
-					<Container>
-						<ContainerLogo>
-							<Image source={logo} style={{ width: 300, height: 100 }}/>
-						</ContainerLogo>
-						<ContainerTextoInicio>
-							<Linha1>
-								Problemas para forma
-							</Linha1>
-							<Linha1>
-								um grupo de trabalho?
-							</Linha1>
-							<Linha2>
-								O Grupou!	resolve!
-							</Linha2>
-						</ContainerTextoInicio>
-						<CaixaLogin>
-							<ContainerBotao>
-								<Botao
-									ultimoClick={botaoAtual == 'aluno'}
-									onPress={()=>{setBotaoAtual('aluno')}}
-								>
-									<BotaoTexto ultimoClick={botaoAtual == 'aluno'}>
-										Aluno
-									</BotaoTexto>
-								</Botao>
-								<Botao
-									ultimoClick={botaoAtual == 'professor'}
-									onPress={()=>{setBotaoAtual('professor')}}
-								>
-									<BotaoTexto ultimoClick={botaoAtual == 'professor'}>
-										Professor
-									</BotaoTexto>
-								</Botao>
-							</ContainerBotao>
-							
-							<InputTexto>E-mail:</InputTexto>
-							<Input />
-							
-							<InputTexto>Senha:</InputTexto>
-							<Input secureTextEntry autoCapitalize="none" />
-							
-							<ContainerEsqueci>
-								<EsqueciSenha>
-										<EsqueciSenhaTexto>Esqueci minha senha</EsqueciSenhaTexto>
+			<Container>
 
-									</EsqueciSenha>
-							</ContainerEsqueci>
-							
-							<ContainerBotao>
-								<BotaoCadastrar>
-									<BotaoTextoCadastrar>
-										Cadastre-se
-									</BotaoTextoCadastrar>
-								</BotaoCadastrar>
-								
-								<BotaoEntrar>
-									<BotaoTextoEntrar>
-										Entar
-									</BotaoTextoEntrar>
-								</BotaoEntrar>
-							</ContainerBotao>
-						</CaixaLogin>
-					</Container>
-	</ScrollView>
-	
-	</>
-  );
+				<Logo>
+					<Image source={logoImg} style={{ width: 300, height: 100 }} />
+				</Logo>
+
+				<CaixaTextoChamada>
+					<TextoChamada>
+						Problemas para formar
+					</TextoChamada>
+					<TextoChamada>
+						um grupo de trabalho
+					</TextoChamada>
+					<TextoChamada>
+						O <TextoGrupou>Grupou! </TextoGrupou>resolve!
+					</TextoChamada>
+				</CaixaTextoChamada>
+
+				<CaixaLogin>
+					<ContainerBotoes>
+						<Botao ultimoClick={
+							botaoAtual == 'aluno' ? true : false
+						}
+							onPress={() => {
+								setBotaoAtual('aluno')
+							}}>
+							<BotaoTexto
+								ultimoClick={
+									botaoAtual == 'aluno' ? true : false
+								}
+							>Aluno</BotaoTexto>
+						</Botao>
+						<Botao
+							ultimoClick={
+								botaoAtual == 'professor' ? true : false
+							}
+							onPress={() => {
+								setBotaoAtual('professor')
+							}}>
+							<BotaoTexto
+								ultimoClick={
+									botaoAtual == 'professor' ? true : false
+								}
+							>Professor</BotaoTexto>
+						</Botao>
+					</ContainerBotoes>
+
+					<ContainerInputs>
+						<InputTexto>Email</InputTexto>
+						<Input
+							placeholder="Digite seu email"
+							onChangeText={text => setEmail(text)}
+							value={email}
+						/>
+
+						<InputTexto>Senha</InputTexto>
+						<Input
+							placeholder="Digite sua senha"
+							secureTextEntry={true}
+							onChangeText={text => setPassword(text)}
+							value={password}
+						/>
+					</ContainerInputs>
+
+					<ForgotPassword >
+						<TextForgotPassword >Esqueci minha senha</TextForgotPassword >
+
+					</ForgotPassword >
+
+
+					<ContainerButtons>
+						<Button
+							invert={true}
+							onPress={() => { handleSignUp() }}
+						>
+							{carregando ?
+								<ActivityIndicator color="#AE1B73" /> :
+								<ButtonText invert={true}>
+									Cadastre-se
+								</ButtonText>
+							}
+
+
+						</Button>
+						<Button
+							onPress={() => { handleSignIn() }}
+						>
+							<ButtonText>Entrar</ButtonText>
+						</Button>
+					</ContainerButtons>
+
+
+
+
+				</CaixaLogin>
+			</Container>
+
+		</>
+	);
 }
-const styles = StyleSheet.create({
-  fundo: {
-		position:'absolute',
-		width:'200%',
-		height:'105%',
-		zIndex:0,
-		left:-240,
-  },
-
-});
-

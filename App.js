@@ -1,12 +1,16 @@
 import React from "react";
-import { ImageBackground, StyleSheet, Text, View, ScrollView } from "react-native";
-import Login from './pages/Login'
-import Cadastro from './pages/Cadastro/'
-import Aluno from './pages/Aluno'
+import 'react-native-gesture-handler';
+import { } from "react-native";
+import Routes from './routes'
 
+import { UsuarioProvider } from './context/usuario'
 
-export default function App(){
+import './services/firebase';
+
+export default function App() {
   return (
-    <Cadastro />
+    <UsuarioProvider>
+      <Routes />
+    </UsuarioProvider>
   )
 };
